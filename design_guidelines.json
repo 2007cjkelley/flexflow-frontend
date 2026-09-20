@@ -1,0 +1,130 @@
+{
+  "project_name": "Swiss-Soft Calendar",
+  "design_philosophy": {
+    "name": "Soft Swiss Utility",
+    "core_principles": [
+      "Asymmetry creates tension",
+      "Content is King - Typography is the interface",
+      "Grid is God - visible or invisible structure",
+      "Function over decoration"
+    ],
+    "emotional_tone": "Organized, Calm, Objective, Precise"
+  },
+  "typography": {
+    "font_family_headings": "Inter, sans-serif",
+    "font_family_body": "Inter, sans-serif",
+    "styles": {
+      "h1": "text-5xl font-bold tracking-tighter leading-none text-black",
+      "h2": "text-3xl font-semibold tracking-tight text-gray-900",
+      "h3": "text-xl font-medium tracking-tight text-gray-800",
+      "body": "text-sm leading-relaxed text-gray-600",
+      "label": "text-xs font-bold uppercase tracking-widest text-gray-500",
+      "date_number": "text-2xl font-light tracking-tight text-gray-900",
+      "event_text": "text-xs font-medium leading-none truncate"
+    }
+  },
+  "colors": {
+    "palette": {
+      "background": "#FFFFFF",
+      "foreground": "#0A0A0A",
+      "neutral": {
+        "50": "#FAFAFA",
+        "100": "#F5F5F5",
+        "200": "#E5E5E5",
+        "300": "#D4D4D4",
+        "900": "#171717"
+      },
+      "primary": "#0F172A",
+      "accent": "#EF4444",
+      "event_colors": [
+        { "name": "Work", "bg": "#F3F4F6", "text": "#1F2937", "border": "#E5E7EB" },
+        { "name": "Personal", "bg": "#FEF3C7", "text": "#92400E", "border": "#FDE68A" },
+        { "name": "Urgent", "bg": "#FEE2E2", "text": "#991B1B", "border": "#FECACA" },
+        { "name": "Meeting", "bg": "#DBEAFE", "text": "#1E40AF", "border": "#BFDBFE" }
+      ]
+    },
+    "usage": {
+      "body_bg": "bg-white",
+      "grid_lines": "border-gray-100",
+      "current_day_highlight": "bg-red-500 text-white",
+      "sidebar_bg": "bg-gray-50/50 backdrop-blur-xl"
+    }
+  },
+  "layout": {
+    "spacing_system": {
+      "container_padding": "p-8 md:p-12",
+      "grid_gap": "gap-px bg-gray-200",
+      "component_gap": "gap-6"
+    },
+    "structure": {
+      "sidebar_width": "w-72",
+      "main_grid": "flex-1 h-screen overflow-hidden flex flex-col"
+    },
+    "grid_modes": {
+      "month": "grid grid-cols-7 grid-rows-5 h-full",
+      "week": "grid grid-cols-8 h-full overflow-y-auto",
+      "day": "flex flex-col h-full overflow-y-auto"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "rounded-none bg-black text-white hover:bg-gray-800 px-6 py-3 font-medium text-sm transition-all",
+      "secondary": "rounded-none border border-gray-200 bg-white text-gray-900 hover:bg-gray-50 px-6 py-3 font-medium text-sm transition-all",
+      "icon": "p-2 rounded-full hover:bg-gray-100 transition-colors"
+    },
+    "inputs": {
+      "default": "rounded-none border-gray-200 focus:ring-0 focus:border-black bg-gray-50/50"
+    },
+    "calendar_grid": {
+      "wrapper": "border-l border-t border-gray-200 bg-white",
+      "cell": "min-h-[120px] p-2 border-b border-r border-gray-100 hover:bg-gray-50/30 transition-colors relative",
+      "day_header": "p-4 text-sm font-bold text-gray-500 border-b border-gray-100 text-center uppercase tracking-widest"
+    },
+    "modal": {
+      "overlay": "bg-black/20 backdrop-blur-sm",
+      "content": "rounded-none border border-gray-200 shadow-2xl bg-white p-0 sm:max-w-[425px]"
+    },
+    "path_overrides": {
+      "calendar_component": "/app/frontend/src/components/ui/calendar.jsx",
+      "dialog_component": "/app/frontend/src/components/ui/dialog.jsx",
+      "popover_component": "/app/frontend/src/components/ui/popover.jsx"
+    }
+  },
+  "assets": {
+    "images": {
+      "empty_state": "https://images.unsplash.com/photo-1766430342778-9350996e5d3d?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "placeholder_avatar": "https://images.unsplash.com/photo-1761888856976-c4bc8303f65f?crop=entropy&cs=srgb&fm=jpg&q=85"
+    },
+    "icons_library": "lucide-react"
+  },
+  "visual_enhancers": {
+    "shadows": "shadow-[0_1px_2px_rgba(0,0,0,0.05)]",
+    "borders": "border border-gray-100",
+    "glass": "bg-white/80 backdrop-blur-md"
+  },
+  "instructions_to_main_agent": [
+    "CRITICAL: Do not use the default centered layout. Use a Sidebar + Main Content layout.",
+    "Use Shadcn 'Calendar' component ONLY for the mini-calendar in the sidebar.",
+    "Build the Main Calendar View (Month/Week/Day) using CSS Grid (Tailwind 'grid' classes) manually. Do not try to force Shadcn Calendar to stretch.",
+    "Event Cards in the grid should have NO border-radius (sharp corners) to match the Swiss aesthetic.",
+    "Use the 'empty_state' image for the 404 page or when no events are found in list view.",
+    "Typography: Month Title should be massive (text-4xl or 5xl) and aligned Top-Left.",
+    "Current Day Indicator: A solid red or black circle/square behind the date number.",
+    "Interaction: Clicking a grid cell should open the 'Add Event' dialog.",
+    "Interaction: Clicking an event should open the 'Edit Event' dialog.",
+    "For icons, use Lucide React (standard with Shadcn)."
+  ],
+  "universal_guidelines": [
+    "You tend to converge toward generic, 'on distribution' outputs. Avoid this.",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy",
+    "Use glass-morphism effects with backdrop filters (12-24px blur)",
+    "You MUST NOT apply universal transition. Eg: transition: all.",
+    "You MUST NOT center align the app container, ie do not add .App { text-align: center; }.",
+    "Always use modern button styles (sharp/pill) relevant to the Swiss style.",
+    "NEVER use AI assistant Emoji characters like 🤖 etc.",
+    "Every interaction needs micro-animations.",
+    "Use 2-3x more spacing than feels comfortable.",
+    "Prioritize using pre-existing components from src/components/ui when applicable."
+  ]
+}

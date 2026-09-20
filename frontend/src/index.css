@@ -1,0 +1,348 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+@layer base {
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 0 0% 3.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 0 0% 3.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 0 0% 3.9%;
+        --primary: 0 0% 9%;
+        --primary-foreground: 0 0% 98%;
+        --secondary: 0 0% 96.1%;
+        --secondary-foreground: 0 0% 9%;
+        --muted: 0 0% 96.1%;
+        --muted-foreground: 0 0% 45.1%;
+        --accent: 0 0% 96.1%;
+        --accent-foreground: 0 0% 9%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 89.8%;
+        --input: 0 0% 89.8%;
+        --ring: 0 0% 3.9%;
+        --chart-1: 12 76% 61%;
+        --chart-2: 173 58% 39%;
+        --chart-3: 197 37% 24%;
+        --chart-4: 43 74% 66%;
+        --chart-5: 27 87% 67%;
+        --radius: 0rem;
+    }
+    .dark {
+        --background: 0 0% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 0 0% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 0 0% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 0 0% 9%;
+        --secondary: 0 0% 14.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 0 0% 14.9%;
+        --muted-foreground: 0 0% 63.9%;
+        --accent: 0 0% 14.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 14.9%;
+        --input: 0 0% 14.9%;
+        --ring: 0 0% 83.1%;
+        --chart-1: 220 70% 50%;
+        --chart-2: 160 60% 45%;
+        --chart-3: 30 80% 55%;
+        --chart-4: 280 65% 60%;
+        --chart-5: 340 75% 55%;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+/* Calendar Grid Styles */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background-color: #E5E5E5;
+    gap: 1px;
+}
+
+.calendar-cell {
+    min-height: 120px;
+    background-color: white;
+    padding: 8px 0px 8px 16px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.calendar-cell.selected {
+    background-color: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.35);
+}
+
+.calendar-cell:hover {
+    background-color: #FAFAFA;
+}
+
+.calendar-cell.outside-month {
+    background-color: #FAFAFA;
+}
+
+.calendar-cell.outside-month .day-number {
+    color: #D4D4D4;
+}
+
+.calendar-cell.today .day-number {
+    background-color: #EF4444;
+    color: white;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.events-container {
+    overflow: hidden;
+    max-width: 100%;
+}
+
+/* Week View Styles */
+.week-day-headers {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background-color: white;
+}
+
+.week-grid {
+    display: grid;
+    grid-template-columns: 60px repeat(7, 1fr);
+    background-color: #E5E5E5;
+    gap: 1px;
+}
+
+.week-time-slot {
+    background-color: white;
+    height: 60px;
+    padding: 8px;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.week-time-slot.selected {
+    background-color: rgba(59, 130, 246, 0.12);
+}
+
+/* Day View Styles */
+.day-time-slot {
+    display: flex;
+    background-color: white;
+    height: 60px;
+    border-bottom: 1px solid #F5F5F5;
+    box-sizing: border-box;
+}
+
+.day-time-slot.selected {
+    background-color: rgba(59, 130, 246, 0.12);
+}
+
+.day-time-label {
+    width: 80px;
+    padding: 8px;
+    font-size: 12px;
+    color: #737373;
+    flex-shrink: 0;
+}
+
+.day-time-content {
+    flex: 1;
+    padding: 4px;
+    position: relative;
+    cursor: pointer;
+}
+
+.day-time-content:hover {
+    background-color: #FAFAFA;
+}
+
+/* Event Card Styles */
+.event-card {
+    padding: 4px 6px;
+    margin-bottom: 2px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    opacity: 0.5;
+    position: relative;
+}
+
+.event-card:hover {
+    opacity: 0.7;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.event-card.selected {
+    border: 2px solid rgba(59, 130, 246, 0.8);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+.event-card.selected-event {
+    border: 2px solid rgba(59, 130, 246, 0.8);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+/* Availability Matrix Phase 3 -- eye state 1 (blocks-only, no title): the
+   card has nothing to click into (no detail to open), so it shouldn't
+   invite a click the way a normal event-card does. */
+.event-card-blocks-only {
+    cursor: default;
+}
+.event-card-blocks-only:hover {
+    opacity: 0.5;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Category Colors - Pastel */
+.event-work {
+    background-color: #F3F4F6;
+    color: #1F2937;
+    border-left: 3px solid #9CA3AF;
+}
+
+.event-personal {
+    background-color: #FEF3C7;
+    color: #92400E;
+    border-left: 3px solid #F59E0B;
+}
+
+/* Flex Event Style */
+.event-flex {
+    background-color: #DBEAFE;
+    color: #1E40AF;
+    border-left: none;
+    border-top: 1.5px solid white;
+    border-bottom: 1.5px solid white;
+    opacity: 0.85;
+}
+
+.event-flex:hover {
+    opacity: 1;
+}
+
+.event-urgent {
+    background-color: #FEE2E2;
+    color: #991B1B;
+    border-left: 3px solid #EF4444;
+}
+
+.event-meeting {
+    background-color: #DBEAFE;
+    color: #1E40AF;
+    border-left: 3px solid #3B82F6;
+}
+
+/* Calendar-membership dots -- one small swatch per owning calendar, same
+   color convention as the sidebar's .calendar-row-swatch. Independent of
+   category, which still drives the card's background/border above. */
+.event-card-calendar-dots {
+    position: absolute;
+    top: 2px;
+    right: 3px;
+    display: flex;
+    gap: 2px;
+    align-items: center;
+}
+
+.event-card-calendar-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+}
+
+.event-card-calendar-dot-overflow {
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.45);
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #D4D4D4;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #A3A3A3;
+}
+
+@layer base {
+    [data-debug-wrapper="true"] {
+        display: contents !important;
+    }
+
+    [data-debug-wrapper="true"] > * {
+        margin-left: inherit;
+        margin-right: inherit;
+        margin-top: inherit;
+        margin-bottom: inherit;
+        padding-left: inherit;
+        padding-right: inherit;
+        padding-top: inherit;
+        padding-bottom: inherit;
+        column-gap: inherit;
+        row-gap: inherit;
+        gap: inherit;
+        border-left-width: inherit;
+        border-right-width: inherit;
+        border-top-width: inherit;
+        border-bottom-width: inherit;
+        border-left-style: inherit;
+        border-right-style: inherit;
+        border-top-style: inherit;
+        border-bottom-style: inherit;
+        border-left-color: inherit;
+        border-right-color: inherit;
+        border-top-color: inherit;
+        border-bottom-color: inherit;
+    }
+}

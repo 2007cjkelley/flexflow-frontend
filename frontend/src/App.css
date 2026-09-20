@@ -1,0 +1,1735 @@
+/* Main App Layout - Three Panel Design */
+.app-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: white;
+}
+
+/* Left Panel - Sidebar/Config */
+.sidebar {
+    background-color: rgba(250, 250, 250, 0.5);
+    backdrop-filter: blur(12px);
+    border-right: 1px solid #F5F5F5;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    flex-shrink: 0;
+    height: 100vh;
+    overflow: hidden;
+    transition: width 0.25s ease, min-width 0.25s ease, max-width 0.25s ease, opacity 0.2s ease;
+}
+
+/* Scrollable body inside .sidebar -- .sidebar itself stays a fixed-height,
+   overflow:hidden shell (needed for the collapse-width animation), so the
+   form panel + persistent calendar list scroll together here instead of
+   getting clipped when an expanded section (e.g. Repeat) grows past the
+   viewport height. */
+.sidebar-scroll-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    scrollbar-width: thin;
+    scrollbar-color: #D4D4D4 transparent;
+}
+
+.sidebar-scroll-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar-scroll-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-scroll-body::-webkit-scrollbar-thumb {
+    background-color: #D4D4D4;
+    border-radius: 4px;
+}
+
+.sidebar-scroll-body::-webkit-scrollbar-thumb:hover {
+    background-color: #A3A3A3;
+}
+
+.sidebar-collapsed {
+    width: 0;
+    min-width: 0;
+    max-width: 0;
+    opacity: 0;
+    border-right: none;
+    padding: 0;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sidebar-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #0A0A0A;
+    letter-spacing: -0.02em;
+}
+
+.panel-mode-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted-foreground, #737373);
+    flex-shrink: 0;
+}
+
+/* App name + clock bar above the calendar view */
+.calendar-topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 32px;
+    border-bottom: 1px solid #F5F5F5;
+    flex-shrink: 0;
+}
+
+/* Panel Resize/Collapse Grip Handles (left panel + flex queue) */
+.panel-grip-handle {
+    width: 16px;
+    min-width: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: #F5F5F5;
+    border: none;
+    border-right: 1px solid #E5E5E5;
+    cursor: col-resize;
+    padding: 0;
+    flex-shrink: 0;
+    height: 100vh;
+    transition: background-color 0.15s ease;
+}
+
+.panel-grip-handle:hover,
+.panel-grip-handle-dragging {
+    background: #EBEBEB;
+}
+
+.grip-line {
+    display: block;
+    width: 8px;
+    height: 1.5px;
+    background-color: #A3A3A3;
+    border-radius: 1px;
+    transition: background-color 0.15s ease;
+}
+
+.panel-grip-handle:hover .grip-line,
+.panel-grip-handle-dragging .grip-line {
+    background-color: #737373;
+}
+
+/* Center Panel - Flex Queue */
+.center-panel {
+    background-color: #FAFAFA;
+    border-right: 1px solid #F5F5F5;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: width 0.25s ease, min-width 0.25s ease, max-width 0.25s ease, opacity 0.2s ease;
+}
+
+/* Disable width/opacity transitions while actively dragging a handle --
+   otherwise the eased transition fights the per-mousemove width updates. */
+.panel-dragging {
+    transition: none !important;
+}
+
+.center-panel-collapsed {
+    width: 0;
+    min-width: 0;
+    max-width: 0;
+    opacity: 0;
+    border-right: none;
+    padding: 0;
+}
+
+.flex-queue {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 24px;
+}
+
+.flex-queue-header {
+    padding-bottom: 16px;
+    border-bottom: 1px solid #E5E5E5;
+    margin-bottom: 16px;
+}
+
+.flex-queue-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.flex-queue-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0A0A0A;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.flex-queue-select-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #525252;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+}
+
+.flex-queue-select-all input {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    accent-color: #0A0A0A;
+}
+
+.flex-queue-actions-row {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+}
+
+.flex-queue-action-btn {
+    flex: 1;
+    height: 32px;
+    border: 1px solid #D4D4D4;
+    background: white;
+    color: #262626;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.flex-queue-action-btn:hover:not(:disabled) {
+    background: #F5F5F5;
+}
+
+.flex-queue-action-btn.delete:hover:not(:disabled) {
+    border-color: #FCA5A5;
+    color: #B91C1C;
+}
+
+.flex-queue-action-btn.complete:hover:not(:disabled) {
+    border-color: #86EFAC;
+    color: #166534;
+}
+
+.flex-queue-action-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.flex-queue-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 23px;
+}
+
+/* Flex Queue Content */
+.flex-queue-content {
+    flex: 1;
+    display: flex;
+    overflow-y: auto;
+}
+
+.flex-queue-empty {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #A3A3A3;
+    font-size: 13px;
+}
+
+.flex-queue-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 12px;
+    background-color: white;
+    border: 1px solid #E5E5E5;
+    cursor: pointer;
+    gap: 4px;
+    transition: all 0.15s ease;
+}
+
+.flex-queue-item:hover {
+    background-color: #F5F5F5;
+}
+
+.flex-queue-item.selected {
+    background-color: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Priority Phase 3 grey-lock: dimmed + fully non-interactive, matching the
+   .form-input-readonly dimming convention used elsewhere in this file.
+   Task Deadlines Part 1 reuses this same class for its own (separate)
+   deadline grey-lock -- same visual language, different underlying check. */
+.flex-queue-item.locked {
+    opacity: 0.4;
+}
+
+/* Task Deadlines Part 3 -- live highlight on a queue row the pending
+   create/edit/drag's candidate check just flagged as newly missing its
+   deadline. Amber, distinct from .selected's blue, so the two never read
+   as the same state. */
+.flex-queue-item.cascade-affected {
+    border-color: #F59E0B;
+    box-shadow: 0 0 0 1px #F59E0B;
+}
+
+.flex-queue-item-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Task Deadlines Part 1 -- deadline badge shown wherever the task renders
+   in the queue. */
+.flex-deadline-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11px;
+    color: #A3A3A3;
+    white-space: nowrap;
+}
+
+/* Task Deadlines Part 1 -- Insufficient Time banner, shown directly on the
+   task row so it's visible while browsing the queue, not just inside the
+   edit panel. */
+.flex-deadline-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #B45309;
+    background-color: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-radius: 4px;
+    padding: 5px 7px;
+}
+
+.flex-deadline-banner svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.flex-queue-item-drag {
+    color: #A3A3A3;
+    cursor: grab;
+    opacity: 0.5;
+    transition: opacity 0.15s ease;
+}
+
+.flex-queue-item:hover .flex-queue-item-drag {
+    opacity: 1;
+}
+
+.flex-queue-item-name {
+    flex: 1;
+    font-size: 13px;
+    color: #0A0A0A;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.flex-queue-item-name.placeholder {
+    color: #A3A3A3;
+}
+
+.flex-queue-time {
+    position: relative;
+    font-size: 11px;
+    color: #737373;
+    white-space: nowrap;
+}
+
+.flex-queue-time::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 8px);
+    background: #111827;
+    color: #f9fafb;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 6px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 20;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+.flex-queue-time::before {
+    content: "";
+    position: absolute;
+    right: 10px;
+    bottom: calc(100% + 2px);
+    border: 6px solid transparent;
+    border-top-color: #111827;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 20;
+}
+
+.flex-queue-item:hover .flex-queue-time::after,
+.flex-queue-item:hover .flex-queue-time::before {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.flex-queue-time:not([data-tooltip])::after,
+.flex-queue-time:not([data-tooltip])::before {
+    display: none;
+}
+
+.flex-queue-item-check {
+    width: 18px;
+    height: 18px;
+    border: 1px solid #D4D4D4;
+    background: white;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+    accent-color: #0A0A0A;
+}
+
+.flex-queue-item-check:hover {
+    border-color: #22C55E;
+    background-color: rgba(34, 197, 94, 0.1);
+}
+
+/* Calendar List (sidebar) */
+.calendar-list {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.calendar-list-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 240px;
+    overflow-y: auto;
+    padding-top: 4px;
+}
+
+.calendar-row {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #E5E5E5;
+    background-color: white;
+}
+
+.calendar-row-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+}
+
+.calendar-row-eye-btn,
+.calendar-row-wave-btn,
+.calendar-row-matrix-btn {
+    background: none;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: var(--muted-foreground, #737373);
+}
+
+/* Availability Matrix: the single per-row control. Its second class
+   (calendar-row-eye-btn / -wave-btn / -intersect-btn)
+   carries the per-cell pressed/dimmed styling already defined for those. */
+
+.availability-matrix-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px 2px 8px 2px;
+}
+
+.availability-matrix-toggles {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.availability-matrix-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #F5F5F5;
+    border: 1px solid #E5E5E5;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 11px;
+    color: #0A0A0A;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.availability-matrix-toggle:hover {
+    border-color: #D4D4D4;
+}
+
+.availability-matrix-toggle[data-value="tasks-queue"],
+.availability-matrix-toggle[data-value="availability"] {
+    background: #EEF2FF;
+    border-color: #C7D2FE;
+}
+
+.availability-matrix-toggle-word {
+    font-weight: 500;
+}
+
+.availability-matrix-help-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid #D4D4D4;
+    background: white;
+    color: #737373;
+    font-size: 11px;
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.availability-matrix-help-btn[aria-expanded="true"] {
+    background: #0A0A0A;
+    color: white;
+    border-color: #0A0A0A;
+}
+
+.availability-matrix-help-text {
+    font-size: 11px;
+    color: #525252;
+    line-height: 1.45;
+}
+
+.availability-matrix-help-text p {
+    margin: 2px 0;
+}
+
+.calendar-row-eye-btn[aria-pressed="true"] {
+    color: #0A0A0A;
+}
+
+/* Availability Matrix Phase 3 -- state 1 (blocks-only), between off and
+   full. */
+.calendar-row-eye-btn[aria-pressed="mixed"] {
+    color: #525252;
+}
+
+/* Informational, not an error/disabled affordance -- the eye button that
+   triggered this is fully functional, just capped at a lower state by the
+   owner's sharing permission. */
+.calendar-eye-permission-note {
+    font-size: 11px;
+    color: #737373;
+    margin-left: 6px;
+}
+
+.calendar-row-wave-btn[aria-pressed="true"] {
+    color: #0A0A0A;
+    opacity: 1;
+}
+
+.calendar-row-wave-btn[aria-pressed="false"] {
+    opacity: 0.35;
+}
+
+.calendar-row-membership-check {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #D4D4D4;
+    background: white;
+    cursor: pointer;
+    flex-shrink: 0;
+    accent-color: #0A0A0A;
+}
+
+.calendar-row-membership-check:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+.calendar-row-badge {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.calendar-row-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: inline-block;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.calendar-row-name {
+    flex: 1;
+    font-size: 13px;
+    color: #0A0A0A;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.calendar-row-intersect-btn {
+    background: none;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: var(--muted-foreground, #737373);
+}
+
+.calendar-row-intersect-btn[aria-pressed="true"] {
+    color: #0A0A0A;
+    opacity: 1;
+}
+
+.calendar-row-intersect-btn[aria-pressed="false"] {
+    opacity: 0.35;
+}
+
+/* Staged Calendar Editing -- recasts the calendar-config panel's
+   "Availability matrix" section as a real 2x2 grid (Just Looking/Task
+   Queue x Events/Availability) with visible axis labels, replacing Phase
+   4's flat row of four buttons. Corner cell is blank; row/col labels sit
+   in the first row/column. */
+.calendar-config-matrix-grid {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    align-items: center;
+    gap: 6px 10px;
+}
+
+.calendar-config-matrix-corner {
+    /* Empty top-left cell -- intentionally blank. */
+}
+
+.calendar-config-matrix-col-label,
+.calendar-config-matrix-row-label {
+    font-size: 11px;
+    color: var(--muted-foreground, #737373);
+    white-space: nowrap;
+}
+
+.calendar-config-matrix-col-label {
+    text-align: center;
+}
+
+.calendar-config-matrix-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Staged Calendar Editing -- inline error for one calendar-config field
+   group after a partial-Save failure (see handleSaveCalendarConfig). */
+.calendar-config-field-error {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #B45309;
+    padding: 3px 0;
+}
+
+/* Same .calendar-config-field-error message,
+   reused for the calendar row's own wave guard (outside calendar-config),
+   just aligned with the row's own edge padding instead of the panel's. */
+.calendar-row-wave-guard {
+    padding: 0 10px 6px;
+}
+
+/* Staged Calendar Editing -- a failed share "add" doesn't render as a
+   normal roster row (CalendarRosterPanel remounts against the real
+   roster once Save settles, see rosterRefreshNonce); instead it shows
+   here as an editable, correctable pending entry. */
+.calendar-config-pending-share-failure {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.calendar-config-pending-share-failure .form-input {
+    flex: 1;
+}
+
+.calendar-config-pending-share-failure .calendar-config-field-error {
+    flex-shrink: 0;
+}
+
+.calendar-config-pending-share-discard-btn {
+    background: none;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: var(--muted-foreground, #A3A3A3);
+    flex-shrink: 0;
+}
+
+.open-blocks-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+/* Availability Matrix Phase 4 -- a non-owner's read-only view of a shared
+   calendar's availability (PUT /open-blocks is owner-only server-side, so
+   there's nothing here to click). Plain text, not the interactive
+   .open-blocks-unit card shell it replaces for this role. */
+.open-blocks-unit-readonly {
+    font-size: 12px;
+    color: var(--muted-foreground, #737373);
+    padding: 4px 0;
+}
+
+.open-blocks-readonly-empty {
+    font-size: 12px;
+    color: var(--muted-foreground, #A3A3A3);
+    font-style: italic;
+}
+
+.open-blocks-unit {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px;
+    border: 1px solid #F0F0F0;
+    background: #FAFAFA;
+}
+
+.open-blocks-unit-row1 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.open-blocks-time-input {
+    font-size: 11px;
+    border: 1px solid #D4D4D4;
+    padding: 2px 4px;
+    width: 90px;
+}
+
+.open-blocks-time-sep {
+    font-size: 11px;
+    color: #A3A3A3;
+}
+
+.open-blocks-unit-delete-btn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: var(--muted-foreground, #A3A3A3);
+}
+
+/* Tighter than the (now-removed) Settings panel's .day-checkbox-text sizing
+   -- this sub-row's real content width is ~208px (300px fixed sidebar - 48px
+   sidebar padding - 44px .calendar-row-expanded padding), which the original
+   6px/10px padding + 11px font does not fit at 7 labels. */
+.open-blocks-unit-row2.day-checkboxes {
+    gap: 2px;
+}
+
+.open-blocks-unit-row2 .day-checkbox-text {
+    padding: 4px 5px;
+    font-size: 10px;
+    min-width: 18px;
+    text-align: center;
+}
+
+.open-blocks-day-compact {
+    display: none;
+}
+
+.open-blocks-day-full {
+    display: inline;
+}
+
+@media (max-width: 480px) {
+    .open-blocks-day-full {
+        display: none;
+    }
+    .open-blocks-day-compact {
+        display: inline;
+    }
+}
+
+.open-blocks-add-unit-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    background: none;
+    border: 1px dashed #D4D4D4;
+    padding: 4px 8px;
+    cursor: pointer;
+    color: var(--muted-foreground, #737373);
+}
+
+.calendar-row-color-input {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: 1px solid #D4D4D4;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.calendar-row-delete-btn {
+    background: none;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    color: var(--muted-foreground, #737373);
+    /* Availability Matrix Phase 4 -- relocated off the row into
+       calendar-config, now with a text label alongside the icon. */
+    font-size: 12px;
+}
+
+.calendar-row-delete-btn:hover:not(:disabled) {
+    color: #EF4444;
+}
+
+.calendar-row-delete-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* ── Calendar Sharing -- Phase 1 (UI only, mocked) ───────────────────── */
+.calendar-row-settings-btn {
+    background: none;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: var(--muted-foreground, #737373);
+}
+
+.calendar-row-settings-btn:hover {
+    color: #0A0A0A;
+}
+
+.calendar-add-choice {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.calendar-add-choice-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted-foreground, #737373);
+    background: none;
+    border: 1px dashed #D4D4D4;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.calendar-add-choice-btn:hover {
+    border-color: #0A0A0A;
+    color: #0A0A0A;
+}
+
+.calendar-add-choice-cancel-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: var(--muted-foreground, #737373);
+}
+
+.calendar-add-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted-foreground, #737373);
+    background: none;
+    border: 1px dashed #D4D4D4;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.calendar-add-btn:hover {
+    border-color: #0A0A0A;
+    color: #0A0A0A;
+}
+
+/* Right Panel - Main Content/Calendar */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+/* Calendar Header */
+.calendar-header {
+    padding: 24px 32px;
+    border-bottom: 1px solid #F5F5F5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.calendar-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #0A0A0A;
+    letter-spacing: -0.03em;
+    line-height: 1;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* View Toggle */
+.view-toggle {
+    display: flex;
+    background-color: #F5F5F5;
+    padding: 4px;
+}
+
+.view-toggle-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #737373;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.view-toggle-btn:hover {
+    color: #0A0A0A;
+}
+
+.view-toggle-btn.active {
+    background-color: white;
+    color: #0A0A0A;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Event Type Toggle */
+.event-type-toggle {
+    display: flex;
+    background-color: #F5F5F5;
+    padding: 4px;
+    width: 100%;
+}
+
+.event-type-btn {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #737373;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.event-type-btn:hover {
+    color: #0A0A0A;
+}
+
+.event-type-btn.active {
+    background-color: white;
+    color: #0A0A0A;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Navigation Buttons */
+.nav-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.nav-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid #E5E5E5;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: #0A0A0A;
+}
+
+.nav-btn:hover {
+    background-color: #F5F5F5;
+}
+
+/* Calendar View Container */
+.calendar-view {
+    flex: 1;
+    overflow: auto;
+}
+
+/* Day Headers */
+.day-headers {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background-color: white;
+    border-bottom: 1px solid #E5E5E5;
+}
+
+.day-header {
+    padding: 16px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #737373;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Week View Header */
+.week-day-headers {
+    display: grid;
+    grid-template-columns: 60px repeat(7, 1fr);
+    background-color: white;
+    border-bottom: 1px solid #E5E5E5;
+}
+
+.week-day-header {
+    padding: 12px 8px;
+    text-align: center;
+    border-left: 1px solid #F5F5F5;
+}
+
+.week-day-header:first-child {
+    border-left: none;
+}
+
+.week-day-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: #737373;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.week-day-number {
+    font-size: 24px;
+    font-weight: 300;
+    color: #0A0A0A;
+    margin-top: 4px;
+}
+
+.week-day-number.today {
+    background-color: #EF4444;
+    color: white;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px auto 0;
+}
+
+/* Day View Header */
+.day-view-header {
+    padding: 24px 32px;
+    background-color: white;
+    border-bottom: 1px solid #E5E5E5;
+}
+
+.day-view-date {
+    font-size: 48px;
+    font-weight: 300;
+    color: #0A0A0A;
+}
+
+.day-view-weekday {
+    font-size: 14px;
+    font-weight: 500;
+    color: #737373;
+    margin-top: 4px;
+}
+
+/* Add Event Button */
+.add-event-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #0A0A0A;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.add-event-btn:hover {
+    background-color: #262626;
+}
+
+.add-event-btn-disabled {
+    background-color: #D4D4D4;
+    color: #737373;
+    cursor: not-allowed;
+}
+
+.add-event-btn-disabled:hover {
+    background-color: #D4D4D4;
+}
+
+.add-event-blocked-message {
+    font-size: 12px;
+    color: #DC2626;
+    margin-top: 6px;
+}
+
+/* Today Button */
+.today-btn {
+    padding: 10px 20px;
+    background-color: white;
+    color: #0A0A0A;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid #E5E5E5;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.today-btn:hover {
+    background-color: #F5F5F5;
+}
+
+/* Form Styles */
+/* Settings Panel - Compact Layout */
+.settings-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.settings-panel-header {
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 8px;
+    flex-shrink: 0;
+}
+
+.settings-panel-scroll {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    padding-right: 4px;
+}
+
+.settings-actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 8px;
+    flex-shrink: 0;
+}
+
+/* Staged Calendar Editing -- calendar-config's action row is Delete,
+   Cancel, Save (Delete stays immediate/unstaged, unlike the other two).
+   Pushing Delete to the left keeps the destructive action visually
+   separate from Cancel/Save, which is the layout every other panel's
+   .settings-actions already uses (a plain flex row of equal-width
+   .settings-action-btn siblings) so this only needs one extra rule
+   rather than a new container class. */
+.settings-actions .calendar-row-delete-btn {
+    margin-right: auto;
+    flex: 0 0 auto;
+}
+
+.settings-action-btn {
+    flex: 1;
+    padding: 6px 0 !important;
+    font-size: 13px !important;
+}
+
+.settings-panel .form-group {
+    margin-bottom: 12px;
+}
+
+.settings-panel .form-label {
+    margin-bottom: 4px;
+    font-size: 10px;
+}
+
+.settings-panel .form-input {
+    padding: 6px 8px;
+    font-size: 13px;
+}
+
+.settings-panel select.form-input {
+    padding: 6px 8px;
+    font-size: 13px;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #737373;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #E5E5E5;
+    background-color: #FAFAFA;
+    transition: border-color 0.15s ease;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #0A0A0A;
+    background-color: white;
+}
+
+.flex-priority-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.flex-priority-row .form-label {
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+
+.flex-priority-row .form-input {
+    flex: 1;
+    padding: 6px 8px;
+}
+
+.form-input-readonly {
+    background-color: #E5E5E5 !important;
+    color: #737373;
+    cursor: not-allowed;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Step Buttons for Flex Duration */
+.step-btn {
+    width: 28px;
+    height: 20px;
+    background-color: #F5F5F5;
+    border: 1px solid #E5E5E5;
+    color: #737373;
+    font-size: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.step-btn:hover {
+    background-color: #E5E5E5;
+    color: #0A0A0A;
+}
+
+/* Min Duration Group */
+.min-duration-group {
+    border: 1px solid #E5E5E5;
+    padding: 12px;
+    background-color: #FAFAFA;
+}
+
+.min-duration-checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #0A0A0A;
+}
+
+.min-duration-label {
+    font-size: 12px;
+    color: #A3A3A3;
+    flex: 1;
+}
+
+.min-duration-label.active {
+    color: #0A0A0A;
+}
+
+.min-duration-input {
+    width: 60px !important;
+    padding: 6px 8px !important;
+    text-align: center;
+    background-color: #E5E5E5 !important;
+    color: #A3A3A3;
+}
+
+.min-duration-input.active {
+    background-color: white !important;
+    color: #0A0A0A;
+}
+
+/* Delete Button */
+.delete-btn {
+    padding: 12px 20px;
+    background-color: #FEE2E2;
+    color: #991B1B;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.delete-btn:hover {
+    background-color: #FECACA;
+}
+
+/* Empty State */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    color: #737373;
+}
+
+.empty-state-text {
+    font-size: 14px;
+    margin-top: 16px;
+}
+
+/* Settings Button */
+.settings-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: transparent;
+    color: #737373;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid #E5E5E5;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.settings-btn:hover {
+    background-color: #F5F5F5;
+    color: #0A0A0A;
+    border-color: #D4D4D4;
+}
+
+/* Settings Close Button */
+.settings-close-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #737373;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.settings-close-btn:hover {
+    color: #0A0A0A;
+    background-color: #F5F5F5;
+}
+
+/* Day Checkboxes */
+.day-checkboxes {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.day-checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.day-checkbox {
+    display: none;
+}
+
+.day-checkbox-text {
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #A3A3A3;
+    background-color: #F5F5F5;
+    border: 1px solid #E5E5E5;
+    transition: all 0.15s ease;
+}
+
+.day-checkbox-text.active {
+    color: #0A0A0A;
+    background-color: white;
+    border-color: #0A0A0A;
+}
+
+.day-checkbox-text:hover {
+    background-color: #FAFAFA;
+}
+
+/* Settings Note */
+.settings-note {
+    font-size: 11px;
+    color: #A3A3A3;
+    margin-top: 6px;
+    font-style: italic;
+}
+
+/* ── Auth Screen ─────────────────────────────── */
+.auth-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f172a;
+}
+
+.auth-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 36px 32px;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0;
+}
+
+.auth-subtitle {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.auth-error {
+  background: #450a0a;
+  border: 1px solid #7f1d1d;
+  color: #fca5a5;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+}
+
+.auth-message {
+  color: #4ade80;
+  font-size: 13px;
+  margin-bottom: 12px;
+  text-align: center;
+  padding: 8px;
+}
+
+.auth-toggle {
+  background: none;
+  border: none;
+  color: #60a5fa;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0;
+  text-align: center;
+}
+
+.auth-toggle:hover {
+  text-decoration: underline;
+}
+
+.delete-account-impact-list {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 8px 12px;
+  background: #1c1917;
+  border: 1px solid #44403c;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  color: #d6d3d1;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.delete-account-impact-list li {
+  padding: 2px 0;
+}
+
+.password-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrap .form-input {
+  width: 100%;
+  padding-right: 36px;
+}
+
+.password-eye-btn {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.password-eye-btn:hover {
+  color: #f1f5f9;
+}
+
+.password-hint {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+/* ── Profile menu ─────────────────────────────── */
+.profile-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-menu-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #F5F5F5;
+  border: 1px solid #E5E5E5;
+  color: #404040;
+  cursor: pointer;
+}
+
+.profile-menu-btn:hover {
+  background: #E5E5E5;
+}
+
+.profile-menu-badge {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #EF4444;
+  border: 1.5px solid #ffffff;
+}
+
+.profile-menu-section-label {
+  padding: 8px 12px 2px 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #A3A3A3;
+}
+
+.profile-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  min-width: 180px;
+  z-index: 50;
+  overflow: hidden;
+}
+
+.profile-menu-email {
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #737373;
+  border-bottom: 1px solid #F5F5F5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: #0A0A0A;
+  cursor: pointer;
+}
+
+.profile-menu-item:hover {
+  background: #F5F5F5;
+}
+
+.profile-menu-item-danger {
+  color: #DC2626;
+}
+
+/* ── Modal (change password / delete account) ─────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 28px;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
