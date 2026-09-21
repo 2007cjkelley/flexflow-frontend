@@ -7,7 +7,7 @@ priority and deadlines, and re-flowing as your day changes.
 
 **Live:** [skedge.us](https://skedge.us)
 
-![FlexFlow screenshot](frontend/demo_screenshot.png)
+![FlexFlow screenshot](demo_screenshot.png)
 
 ## Features
 - Auto-placement of flex tasks around rigid events
