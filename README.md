@@ -5,6 +5,10 @@ commitments (rigid events); FlexFlow automatically places your flex tasks
 into the open time around them — splitting tasks into chunks, respecting
 priority and deadlines, and re-flowing as your day changes.
 
+**Try the demo:** [skedge.us/demo](https://skedge.us/demo)
+— a working demo of the full production app, preloaded with sample
+data. No account needed.
+
 **Live:** [skedge.us](https://skedge.us)
 
 ![FlexFlow screenshot](demo_screenshot.png)
@@ -30,4 +34,7 @@ React · FastAPI · PostgreSQL · Supabase auth · Cloudflare Workers · Railway
 
 ## About this repo
 This is the frontend only. The placement engine, backend, and test suite
-are private.
+are private, and so is the code for two features: per-task calendars and
+ambient availability. The engine and those features are what set FlexFlow
+apart, and they're the core IP of the app, so they stay out of a public
+repo. All of it runs in the [demo](https://skedge.us/demo).
